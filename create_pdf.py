@@ -19,30 +19,17 @@ def create_pdf(input_pdf, output_pdf, text, image_path, x, y):
     pdf = SimpleDocTemplate(buffer, pagesize=letter)
     pdf.pages = []
 
-    # Define a custom PageTemplate with a Frame
-    frame = Frame(x, y, pdf.width, pdf.height / 10, id="normal")
+    frame = Frame(x, y, pdf.width * 0.7 , pdf.height / 5, id="normal")
+    frame.showBoundary = True
+    
     template = PageTemplate(id="test", frames=[frame])
-
-    # Create a Story (list of flowable elements)
     story = []
     
-    # Set the font and font size
-    styles = getSampleStyleSheet()
-    style = styles['Normal']
-    style.fontName = 'Helvetica'
-    style.fontSize = 10
-
-    # Create a Paragraph with the dynamic text
-    p = Paragraph(text, style)
-
-    # Add the Paragraph to the Story
+    p = build_paragraph(text)
     story.append(p)
 
-    # Add the image to the Story
-    # img = Image(image_path, width=450, height=75)  # Adjust the width and height as needed
-    # img.hAlign = 'LEFT'  # Horizontal alignment
-    # img.vAlign = 'BOTTOM'  # Vertical alignment
-    # story.append(img)
+    img = build_image(image_path)
+    story.append(img)
 
     # Build the PDF with the Story and PageTemplate
     pdf.addPageTemplates([template])
@@ -59,14 +46,34 @@ def create_pdf(input_pdf, output_pdf, text, image_path, x, y):
     with open(output_pdf, "wb") as f:
         output_pdf_writer.write(f)
 
+def build_paragraph(text):
+    # Set the font and font size
+    styles = getSampleStyleSheet()
+    style = styles['Normal']
+    style.fontName = 'Helvetica'
+    style.fontSize = 10
+    # Create a Paragraph with the dynamic text
+    p = Paragraph(text, style)
+    p.hAlign = 'RIGHT'
+    p.vAlign = 'BOTTOM'
+    return p
+
+def build_image(image_path):
+    #img = Image(image_path, width=450, height=75)
+    img = Image(image_path, 400, 50)
+    img.hAlign = 'LEFT'
+    img.vAlign = 'BOTTOM'
+    return img
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print("Usage: python3 create_pdf.py output_pdf dynamic_text")
     else:
-        input_pdf = "pdfs/document.pdf"
+        input_pdf = "pdfs/empty.pdf" # "pdfs/document.pdf"
         x_coordinate = 0
-        y_coordinate = 0
-        # image_path = "imgs/footer.jpg"
+        y_coordinate = 10
+        image_path = "imgs/footer.jpg"
 
         output_pdf = "pdfs/generated/" + sys.argv[1] + ".pdf"
         dynamic_text = sys.argv[2]
