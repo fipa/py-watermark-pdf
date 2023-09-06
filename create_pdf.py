@@ -1,3 +1,5 @@
+import sys
+
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, PageTemplate, Frame, Paragraph, Image
@@ -37,10 +39,10 @@ def create_pdf(input_pdf, output_pdf, text, image_path, x, y):
     story.append(p)
 
     # Add the image to the Story
-    img = Image(image_path, width=450, height=75)  # Adjust the width and height as needed
-    img.hAlign = 'LEFT'  # Horizontal alignment
-    img.vAlign = 'BOTTOM'  # Vertical alignment
-    story.append(img)
+    # img = Image(image_path, width=450, height=75)  # Adjust the width and height as needed
+    # img.hAlign = 'LEFT'  # Horizontal alignment
+    # img.vAlign = 'BOTTOM'  # Vertical alignment
+    # story.append(img)
 
     # Build the PDF with the Story and PageTemplate
     pdf.addPageTemplates([template])
@@ -57,14 +59,15 @@ def create_pdf(input_pdf, output_pdf, text, image_path, x, y):
     with open(output_pdf, "wb") as f:
         output_pdf_writer.write(f)
 
-# Usage example
-input_pdf = "pdfs/document.pdf"  # Replace with the path to your existing PDF
-x_coordinate = 0  # Specify the X-coordinate
-y_coordinate = 0  # Specify the Y-coordinate
-name = "John Doe"
-text = "Prohibida la venta o reproducción. Uso exclusivo de " + name
-output_pdf = "pdfs/generated/out" + name + ".pdf"  # Replace with the desired output PDF
-image_path = "imgs/footer.jpg"
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python3 create_pdf.py output_pdf dynamic_text")
+    else:
+        input_pdf = "pdfs/document.pdf"
+        x_coordinate = 0
+        y_coordinate = 0
+        # image_path = "imgs/footer.jpg"
 
-
-create_pdf(input_pdf, output_pdf, text, image_path, x_coordinate, y_coordinate)
+        output_pdf = "pdfs/generated/" + sys.argv[1] + ".pdf"
+        dynamic_text = sys.argv[2]
+        create_pdf(input_pdf, output_pdf, dynamic_text, image_path, x_coordinate, y_coordinate)
