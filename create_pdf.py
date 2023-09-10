@@ -43,7 +43,7 @@ def overlay_frame(input_pdf, output_pdf, element, width, height, x, y):
     page = existing_pdf.getPage(0)
     output_pdf_writer.addPage(page)
     # for i in range(1, existing_pdf.getNumPages()):
-    for i in range(1, 6):
+    for i in range(1, 2): # for testing
         page = existing_pdf.getPage(i)
         overlay_page =   PdfFileReader(buffer).getPage(0)
         page.mergeTranslatedPage(overlay_page, x, y)
@@ -58,7 +58,7 @@ def build_paragraph(text, email, font):
     style = styles['Normal']
     style.fontName = font
     style.fontSize = 12
-    # Create a Paragraph with the dynamic text
+
     p = Paragraph(text.upper() + " - " + email, style)
     p.hAlign = 'RIGHT'
     p.vAlign = 'BOTTOM'
@@ -72,15 +72,15 @@ def build_image(image_path, width, height):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: python3 create_pdf.py output_pdf dynamic_text email")
+    if len(sys.argv) != 3:
+        print("Usage: python3 create_pdf.py dynamic_text email")
     else:
-        input_pdf = "pdfs/autocuidado" # "pdfs/document.pdf"
+        input_pdf = "pdfs/autocuidado"
         x_coordinate = 0
         y_coordinate = 0
         image_path = "imgs/footer.png"
 
-        output_pdf = "pdfs/generated/" + sys.argv[1]
-        dynamic_text = sys.argv[2]
-        email = sys.argv[3]
+        dynamic_text = sys.argv[1]
+        output_pdf = "pdfs/generated/" + dynamic_text.replace(" ", "")
+        email = sys.argv[2]
         create_pdf(input_pdf, output_pdf, dynamic_text, email, image_path, x_coordinate, y_coordinate)
