@@ -70,6 +70,21 @@ def build_image(image_path, width, height):
     img.vAlign = 'BOTTOM'
     return img
 
+def lambda_handler(event, context):
+    input_pdf = "pdfs/" + event["input_pdf"] + ".pdf"
+    x_coordinate = 0
+    y_coordinate = 0
+    image_path = "imgs/footer.png"
+    text = event["text"]
+    output_pdf = "pdfs/generated/" + event["text"] + "_" + dynamic_text.replace(" ", "") + ".pdf"
+    email = event["email"]
+    create_pdf(input_pdf, output_pdf, text, email, image_path, x_coordinate, y_coordinate)
+
+    return {
+        "statusCode": 200,
+        "body": "PDF generation successful",
+    }
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
