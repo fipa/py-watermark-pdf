@@ -10,16 +10,16 @@ from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 
 def create_pdf(input_pdf, output_pdf, text, email, image_path, x, y):
-    new_output_pdf = output_pdf + "_2"
+    tmp_output_pdf = output_pdf.replace(".pdf", "_tmp.pdf")
     img_resize = 0.18
     width = 1506 * img_resize
     height = 93 * img_resize
     frame_resize = 2
     img = build_image(image_path, width, height)
-    overlay_frame(input_pdf + '.pdf', output_pdf, img, width + 6, height * frame_resize, x, y)
+    overlay_frame(input_pdf, tmp_output_pdf, img, width + 6, height * frame_resize, x, y)
 
     p = build_paragraph(text, email, 'ShadowsIntoLight-Regular')
-    overlay_frame(output_pdf + '.pdf', new_output_pdf, p, 300, height * frame_resize * 0.8, x + 140, y + 1)
+    overlay_frame(tmp_output_pdf, output_pdf, p, 300, height * frame_resize * 0.8, x + 140, y + 3)
 
 
 def overlay_frame(input_pdf, output_pdf, element, width, height, x, y):
@@ -43,13 +43,13 @@ def overlay_frame(input_pdf, output_pdf, element, width, height, x, y):
     page = existing_pdf.getPage(0)
     output_pdf_writer.addPage(page)
     # for i in range(1, existing_pdf.getNumPages()):
-    for i in range(1, 2): # for testing
+    for i in range(1, 6): # for testing
         page = existing_pdf.getPage(i)
         overlay_page =   PdfFileReader(buffer).getPage(0)
         page.mergeTranslatedPage(overlay_page, x, y)
         output_pdf_writer.addPage(page)
 
-    with open(output_pdf + ".pdf", "wb") as f:
+    with open(output_pdf, "wb") as f:
         output_pdf_writer.write(f)
 
 def build_paragraph(text, email, font):
@@ -72,15 +72,15 @@ def build_image(image_path, width, height):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python3 create_pdf.py dynamic_text email")
+    if len(sys.argv) != 4:
+        print("Usage: python3 create_pdf.py file dynamic_text email")
     else:
-        input_pdf = "pdfs/autocuidado"
+        input_pdf = "pdfs/" + sys.argv[1] + ".pdf"
         x_coordinate = 0
         y_coordinate = 0
         image_path = "imgs/footer.png"
 
-        dynamic_text = sys.argv[1]
-        output_pdf = "pdfs/generated/" + dynamic_text.replace(" ", "")
-        email = sys.argv[2]
+        dynamic_text = sys.argv[2]
+        output_pdf = "pdfs/generated/" + sys.argv[1] + "_" + dynamic_text.replace(" ", "") + ".pdf"
+        email = sys.argv[3]
         create_pdf(input_pdf, output_pdf, dynamic_text, email, image_path, x_coordinate, y_coordinate)
