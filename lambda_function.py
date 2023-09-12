@@ -71,6 +71,12 @@ def build_image(image_path, width, height):
     return img
 
 def lambda_handler(event, context):
+    return {
+        "statusCode": 200,
+        "body": "hello world successful",
+    }    
+
+def my_lambda_handler(event, context):
     input_pdf = "pdfs/" + event["input_pdf"] + ".pdf"
     x_coordinate = 0
     y_coordinate = 0

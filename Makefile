@@ -1,8 +1,5 @@
 install:
-	pip install -r requirements
-
-generate:
-	python3 create_pdf.py $(output) $(text)
+	pip install -r requirements --target .
 
 create_folders:
 	mkdir imgs
