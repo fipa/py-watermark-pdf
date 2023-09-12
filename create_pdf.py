@@ -19,9 +19,9 @@ def create_pdf(input_pdf, output_pdf, text, email, image_path, x, y):
     img = build_image(image_path, width, height)
 
     p = build_paragraph(text, email, 'ShadowsIntoLight-Regular')
-    overlay(input_pdf, output_pdf, img, p, width + 6, height * frame_resize, x, y)
+    overlay(input_pdf, output_pdf, img, p, height * frame_resize, x, y)
 
-def overlay(input_pdf_path, output_pdf, img, p, width, height, x, y):
+def overlay(input_pdf_path, output_pdf, img, p, height, x, y):
     buffer = BytesIO()
 
     existing_pdf = PdfFileReader(open(input_pdf_path, "rb"))
