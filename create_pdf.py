@@ -40,14 +40,14 @@ def overlay_frame(input_pdf, output_pdf, element, width, height, x, y):
     pdf.addPageTemplates([template])
     pdf.build(story)
 
-    page = existing_pdf.getPage(0)
-    output_pdf_writer.addPage(page)
-    # for i in range(1, existing_pdf.getNumPages()):
-    for i in range(1, 6): # for testing
+    output_pdf_writer.addPage(existing_pdf.getPage(0))
+    for i in range(1, existing_pdf.getNumPages() - 1):
+    # for i in range(1, 6): # for testing
         page = existing_pdf.getPage(i)
         overlay_page =   PdfFileReader(buffer).getPage(0)
         page.mergeTranslatedPage(overlay_page, x, y)
         output_pdf_writer.addPage(page)
+    output_pdf_writer.addPage(existing_pdf.getPage(existing_pdf.getNumPages() - 1))
 
     with open(output_pdf, "wb") as f:
         output_pdf_writer.write(f)
