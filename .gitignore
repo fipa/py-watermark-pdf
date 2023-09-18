@@ -1,2 +1,9 @@
 pdfs/*
 imgs/*
+# dependencies
+PIL/
+Pillow*/
+PyPDF2*/
+reportlab*/
+# build
+deploy*.zip
