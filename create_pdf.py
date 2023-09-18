@@ -35,21 +35,24 @@ def overlay(input_pdf_path, output_pdf, img, p, height, x, y):
 
     frame_width = pdf.width * 0.45  # Divide the page width in half
     frame_img = Frame(x, y, frame_width, height, id="img_frame")
-    frame_img.showBoundary = True
     frame_text = Frame(x + frame_width, y, frame_width, height, id="text_frame")
-    frame_text.showBoundary = True
+    # frame_img.showBoundary = True
+    # frame_text.showBoundary = True
 
     template = PageTemplate(id="custom_template", frames=[frame_img, frame_text])
     story = [img, p]
     pdf.addPageTemplates([template])
     pdf.build(story)
 
+    overlay_page = PdfFileReader(buffer).getPage(0)
+    overlay_page.compressContentStreams()
+
     output_pdf_writer.addPage(existing_pdf.getPage(0))
-    for i in range(1, existing_pdf.getNumPages() - 1):
-    # for i in range(1, 3): # for testing
+    # for i in range(1, existing_pdf.getNumPages() - 1):
+    for i in range(1, 10): # for testing
         page = existing_pdf.getPage(i)
-        overlay_page = PdfFileReader(buffer).getPage(0)
         page.mergeTranslatedPage(overlay_page, x, y)
+        page.compressContentStreams()
         output_pdf_writer.addPage(page)
     output_pdf_writer.addPage(existing_pdf.getPage(existing_pdf.getNumPages() - 1))
 
@@ -74,7 +77,6 @@ def build_image(image_path, width, height):
     img.vAlign = 'BOTTOM'
     return img
 
-
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print("Usage: python3 create_pdf.py file dynamic_text email")
@@ -82,7 +84,7 @@ if __name__ == "__main__":
         input_pdf = "pdfs/" + sys.argv[1] + ".pdf"
         x_coordinate = 0
         y_coordinate = 0
-        image_path = "imgs/footer.png"
+        image_path = "imgs/footer.jpg"
 
         dynamic_text = sys.argv[2]
         output_pdf = "pdfs/generated/" + sys.argv[1] + "_" + dynamic_text.replace(" ", "") + ".pdf"
