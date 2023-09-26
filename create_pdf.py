@@ -48,8 +48,8 @@ def overlay(input_pdf_path, output_pdf, img, p, height, x, y):
     overlay_page.compressContentStreams()
 
     output_pdf_writer.addPage(existing_pdf.getPage(0))
-    # for i in range(1, existing_pdf.getNumPages() - 1):
-    for i in range(1, 10): # for testing
+    for i in range(1, existing_pdf.getNumPages() - 1):
+    # for i in range(1, 10): # for testing
         page = existing_pdf.getPage(i)
         page.mergeTranslatedPage(overlay_page, x, y)
         page.compressContentStreams()
