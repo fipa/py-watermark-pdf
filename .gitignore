@@ -6,4 +6,8 @@ Pillow*/
 PyPDF2*/
 reportlab*/
 # build
+<<<<<<< Updated upstream
 deploy*.zip
+=======
+deployment.zip
+>>>>>>> Stashed changes
